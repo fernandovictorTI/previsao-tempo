@@ -28,7 +28,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Configurando workdir
       run: ls -R
-      working-directory: ${{env.working-directory}}
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
