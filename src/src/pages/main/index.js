@@ -14,6 +14,23 @@ export default function App() {
 
     const [markers, setMarkers] = useState([]);
 
+    function insertMarkerInMap(coordinates) {
+        let newMarkers = [
+            ...markers,
+            {
+                coordinate: coordinates,
+                key: getRandomInt(1, 1500)
+            }
+        ];
+        setMarkers(newMarkers);
+    }
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
     useEffect(() => {
         async function getLocationAsync () {            
 
@@ -46,13 +63,10 @@ export default function App() {
                 style={styles.mapStyle}
                 loadingEnabled={true}
                 initialRegion={location}
-            >
-                {markers.map(marker => (
-                    <Marker
-                    draggable
-                    coordinate={marker.x}
-                    onDragEnd={(e) => { setMarkers({ x: e.nativeEvent.coordinate }); console.log(e); }}
-                    />
+                onPress={(e) => insertMarkerInMap(e.nativeEvent.coordinate)}
+                >
+                {markers.map((marker) => (
+                    <Marker { ...marker }/>
                 ))}
             </MapView>
             )}
