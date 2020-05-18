@@ -10,6 +10,7 @@ const api = axios.create({
 api.interceptors.request.use(async (config) => {
     config.params = config.params || {};
     config.params.APPID = openWeatherMapAppId;
+    config.params.lang = "pt_br";
     return config;
 });
 
