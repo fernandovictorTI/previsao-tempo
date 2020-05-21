@@ -1,106 +1,94 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, Button, View, StyleSheet, Text, Image } from 'react-native';
+import { Animated, Button, View, StyleSheet, Text, Image, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import api from '../../shared/services/openweather.services';
+import utilsFunctions from '../../shared/utils/utils';
 
-export default function DetalhePrevisaoComponent( { display, onFecharModal, coordenadas } ){    
+export default function DetalhePrevisaoComponent( { display, onFecharModal, coordenadas, onSetMarkers } ){    
 
     const [previsao, setPrevisao] = useState(null);
 
     useEffect(() => {
 
-        async function buscarTemperaturaAtual() {
+        _obterPrevisaoTempoAtual = async ()  => {
 
             if(!coordenadas) {
                 return;
             }
 
             const { data } = await api.get(`weather?lat=${coordenadas.latitude}&lon=${coordenadas.longitude}`);
-            console.log(data);
             setPrevisao(data);
         }
 
-        buscarTemperaturaAtual();
+        _obterPrevisaoTempoAtual();
     }, [coordenadas]);
-
-    function obterDiaSemana() {
-        var d = new Date();
-        var diasSemana = new Array(7);
-        diasSemana[0] = "Domingo";
-        diasSemana[1] = "Segunda-feira";
-        diasSemana[2] = "Terça-feira";
-        diasSemana[3] = "Quarta-feira";
-        diasSemana[4] = "Quinta-feira";
-        diasSemana[5] = "Sexta-feira";
-        diasSemana[6] = "Sábado";
-
-        return diasSemana[d.getDay()];
-    }
-
-    function obterHoraAtual() {
-        var d = new Date();
-        return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`
-    }
-
-    function converterTemperaturaCelcius(temp) {
-        return parseFloat((temp - 273.15).toFixed(2))
-    }
-
+    
     return (
         <>
             {previsao && (<Modal 
                 isVisible={display} 
                 onBackdropPress={onFecharModal}
+                onBackButtonPress={onFecharModal}                
+                onSwipeComplete={onFecharModal}
+                swipeDirection="left"
                 animationInTiming={1000}
                 animationOutTiming={1000}
                 backdropTransitionInTiming={800}
                 backdropTransitionOutTiming={800}
             >
                         <View style={styles.content}>
+
+                            <ScrollView>
                             
-                            <Animated.View style={styles.header}>
-                                <Text style={styles.header_text}>
-                                    {previsao.name} - {previsao.sys.country}
-                                </Text>
-                                <Text>
-                                    {obterDiaSemana()}, {obterHoraAtual()}
-                                </Text>
-                                <Text>
-                                      {previsao.weather[0].description}
-                                </Text>
-                            </Animated.View>
+                                <Animated.View style={styles.header}>
+                                    <Text style={styles.header_text}>
+                                        {previsao.name} - {previsao.sys.country}
+                                    </Text>
+                                    <Text>
+                                        {utilsFunctions.obterDiaSemana()}, {utilsFunctions.obterHoraAtual()}
+                                    </Text>
+                                    <Text>
+                                        {previsao.weather[0].description}
+                                    </Text>
+                                </Animated.View>
 
-                            <Animated.View style={styles.body}>
-                                <View>
-                                    <Text style={styles.body_temp}>
-                                            <Image
-                                            style={styles.body_image}
-                                            source={{uri: `http://openweathermap.org/img/wn/${previsao.weather[0].icon}@2x.png`}}
-                                            />
-                                            {converterTemperaturaCelcius(previsao.main.temp)} 
-                                            <Text style={styles.body_temp_graus}>ºC</Text>
-                                    </Text>
-                                    <Text style={styles.body_temp_max_min}>
-                                        Max {converterTemperaturaCelcius(previsao.main.temp_max)} º / Min {converterTemperaturaCelcius(previsao.main.temp_min)} º
-                                    </Text>
-                                    <Text>
-                                        Humidade: {previsao.main.humidity} %
-                                    </Text>  
-                                    <Text>
-                                        Vento: {(previsao.wind.speed * 3.6).toFixed(2)} km/h
-                                    </Text>
-                                    <Text>
-                                        Pressão: {previsao.main.pressure} hPa
-                                    </Text>
+                                <Animated.View style={styles.body}>
+                                    <View>
+                                        <Text style={styles.body_temp}>
+                                                <Image
+                                                style={styles.body_image}
+                                                source={{uri: `http://openweathermap.org/img/wn/${previsao.weather[0].icon}@2x.png`}}
+                                                />
+                                                {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp)} 
+                                                <Text style={styles.body_temp_graus}>ºC</Text>
+                                        </Text>
+                                        <Text style={styles.body_temp_max_min}>
+                                            Max {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp_max)} º / Min {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp_min)} º
+                                        </Text>
+                                        <Text>
+                                            Humidade: {previsao.main.humidity} %
+                                        </Text>  
+                                        <Text>
+                                            Vento: {(previsao.wind.speed * 3.6).toFixed(2)} km/h
+                                        </Text>
+                                        <Text>
+                                            Pressão: {previsao.main.pressure} hPa                                        
+                                        </Text>
 
-                                    <Text style={styles.body_observacao}>                                        
-                                        A temperatura agora é de {converterTemperaturaCelcius(previsao.main.temp)} ºC e parece {converterTemperaturaCelcius(previsao.main.feels_like)} ºC lá fora. O vento está soprando cerca de {(previsao.wind.speed * 3.6).toFixed(2)} km/h pressão de {previsao.main.pressure} hPa.
-                                    </Text>                           
-                                </View>
-                            </Animated.View>                            
+                                        <Text style={styles.body_observacao}>                                        
+                                            A temperatura agora é de {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp)} ºC e parece {utilsFunctions.converterTemperaturaCelcius(previsao.main.feels_like)} ºC lá fora. O vento está soprando cerca de {(previsao.wind.speed * 3.6).toFixed(2)} km/h pressão de {previsao.main.pressure} hPa.
+                                        </Text>                           
+                                    </View>
+                                </Animated.View>
+                            </ScrollView>                        
 
                             <Animated.View style={styles.footer}>
-                                <Button onPress={onFecharModal} title="Fechar" /> 
+                                <Button
+                                    style={styles.buttonFavoritar}
+                                    title="Favoritar Posição"
+                                    color="#302f2b"
+                                    onPress={() => onSetMarkers(coordenadas)}
+                                />
                             </Animated.View>
                         </View>
             </Modal> )}
@@ -111,7 +99,6 @@ export default function DetalhePrevisaoComponent( { display, onFecharModal, coor
 const styles = StyleSheet.create({
     content: {
       flex: 1,
-      flexDirection: "column",
       backgroundColor: 'white',
       padding: 22,
       borderRadius: 4,
@@ -126,18 +113,15 @@ const styles = StyleSheet.create({
       marginBottom: 12,
     },
     header: {
-        flex: 0
     },
     footer: {
-        flex: 0,
-        position: "relative"
+        paddingTop: 50
     },
     header_text: {
         fontSize: 25,
         fontWeight: "bold",
     },
     body: {
-        flex: 0
     },
     body_temp: {
         fontSize: 50,
@@ -161,5 +145,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         textAlign: "justify"
+    },
+    buttonFavoritar: {
     }
   });

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { 
+    StyleSheet, 
+    View, 
+    Dimensions } from 'react-native';
 import DetalhePrevisaoComponent from '../../components/detalhe-previsao';
 import { Guid } from "guid-typescript";
 
@@ -19,7 +22,7 @@ export default function App() {
 
     useEffect(() => {
 
-        async function buscarRegiaoLocal() {
+        _buscarRegiaoLocal = async () => {
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permissão não permitida pelo usuario!');
@@ -38,21 +41,25 @@ export default function App() {
             setLocation(region);
         }
 
-        buscarRegiaoLocal();
+        _buscarRegiaoLocal();
     }, []);
 
     function abrirDetalhePrevisao(coordinates) {
-        // setMarkers(...markers,
-        //     {
-        //         coordinate: coordinates,
-        //         key: Guid.create()
-        //     });
         setCoordenadas(coordinates);
         setDisplay(true);
     }
 
     function onFecharModal() {
         setDisplay(false);
+    }
+
+    function onFecharModalIncluirMarcadores(coordinate) {
+        setDisplay(false);
+        setMarkers([...markers,
+        {
+            coordinate,
+            key: Guid.create()
+        }]);        
     }
      
     return (
@@ -63,12 +70,16 @@ export default function App() {
                 initialRegion={location}
                 onPress={(e) => abrirDetalhePrevisao(e.nativeEvent.coordinate)}
                 >
-                {markers.map((marker) => (
-                    <Marker { ...marker }/>
-                ))}
+                {markers && (markers.map((marker) => (
+                    <Marker 
+                    { ...marker }
+                    onPress={(e) => abrirDetalhePrevisao(e.nativeEvent.coordinate)}
+                    />
+                    ))
+                )}
             </MapView>
             )}
-            <DetalhePrevisaoComponent display={display} onFecharModal={onFecharModal} coordenadas={coordenadas} />
+            <DetalhePrevisaoComponent display={display} onFecharModal={onFecharModal} coordenadas={coordenadas} onSetMarkers={onFecharModalIncluirMarcadores} />
         </View>
     );
 }
