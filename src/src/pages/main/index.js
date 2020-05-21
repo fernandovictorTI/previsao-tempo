@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { 
+    StyleSheet, 
+    View, 
+    Dimensions } from 'react-native';
+import DetalhePrevisaoComponent from '../../components/detalhe-previsao';
+import { Guid } from "guid-typescript";
 
 export default function App() {
 
@@ -11,29 +16,13 @@ export default function App() {
         latitudeDelta: 1,
         longitudeDelta: 1,
       });
-
     const [markers, setMarkers] = useState([]);
-
-    function insertMarkerInMap(coordinates) {
-        let newMarkers = [
-            ...markers,
-            {
-                coordinate: coordinates,
-                key: getRandomInt(1, 1500)
-            }
-        ];
-        setMarkers(newMarkers);
-    }
-
-    function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
+    const [display, setDisplay] = useState(false);
+    const [coordenadas, setCoordenadas] = useState(null);
 
     useEffect(() => {
-        async function getLocationAsync () {            
 
+        _buscarRegiaoLocal = async () => {
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permissão não permitida pelo usuario!');
@@ -47,15 +36,31 @@ export default function App() {
                 longitude: coords.longitude,
                 latitudeDelta: 1,
                 longitudeDelta: 1,
-            };
-
-            // Obter temperatura atual - const { data } = await api.get(`weather?lat=${region.latitude}&lon=${region.longitude}`);                
+            };                            
 
             setLocation(region);
         }
-        
-        getLocationAsync();
+
+        _buscarRegiaoLocal();
     }, []);
+
+    function abrirDetalhePrevisao(coordinates) {
+        setCoordenadas(coordinates);
+        setDisplay(true);
+    }
+
+    function onFecharModal() {
+        setDisplay(false);
+    }
+
+    function onFecharModalIncluirMarcadores(coordinate) {
+        setDisplay(false);
+        setMarkers([...markers,
+        {
+            coordinate,
+            key: Guid.create()
+        }]);        
+    }
      
     return (
         <View style={styles.container}>
@@ -63,13 +68,18 @@ export default function App() {
                 style={styles.mapStyle}
                 loadingEnabled={true}
                 initialRegion={location}
-                onPress={(e) => insertMarkerInMap(e.nativeEvent.coordinate)}
+                onPress={(e) => abrirDetalhePrevisao(e.nativeEvent.coordinate)}
                 >
-                {markers.map((marker) => (
-                    <Marker { ...marker }/>
-                ))}
+                {markers && (markers.map((marker) => (
+                    <Marker 
+                    { ...marker }
+                    onPress={(e) => abrirDetalhePrevisao(e.nativeEvent.coordinate)}
+                    />
+                    ))
+                )}
             </MapView>
             )}
+            <DetalhePrevisaoComponent display={display} onFecharModal={onFecharModal} coordenadas={coordenadas} onSetMarkers={onFecharModalIncluirMarcadores} />
         </View>
     );
 }
