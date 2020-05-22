@@ -17,12 +17,7 @@ const obterHoraAtual = () => {
     return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`
 };
 
-const converterTemperaturaCelcius = (temp) => {
-    return parseFloat((temp - 273.15).toFixed(2))
-};
-
 export default  {
     obterDiaSemana,
-    obterHoraAtual,
-    converterTemperaturaCelcius
+    obterHoraAtual
 };

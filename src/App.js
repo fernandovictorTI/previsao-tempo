@@ -1,7 +1,7 @@
 import React from 'react';
 
-import App from './src/pages/main'
+import MapaComponent from './app/containers/Mapa/index';
 
 export default function Main() {
-  return <App />;
+  return <MapaComponent />;
 }
