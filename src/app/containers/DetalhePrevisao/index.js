@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, Button, View, StyleSheet, Text, Image, ScrollView } from 'react-native';
+import { Button, View, Text, Image, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import openWeatherService from '../../services/openweather.services';
 import dataHelper from '../../helper/data.helper';
 import temperaturaHelper from '../../helper/temperatura.helper';
+import {
+    styles,
+    buttons
+  } from './index.style';
 
-export default function DetalhePrevisaoComponent( { display, onFecharModal, coordenadas, onSetMarkers } ){    
+
+const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMarkers }) => {
 
     const [previsao, setPrevisao] = useState(null);
 
@@ -37,12 +42,12 @@ export default function DetalhePrevisaoComponent( { display, onFecharModal, coor
                 backdropTransitionInTiming={800}
                 backdropTransitionOutTiming={800}
             >
-                        <View style={styles.content}>
+                        <View style={styles.card}>
 
                             <ScrollView>
                             
-                                <Animated.View style={styles.header}>
-                                    <Text style={styles.header_text}>
+                                <View style={styles.header}>
+                                    <Text style={styles.headerTitle}>
                                         {previsao.name} - {previsao.sys.country}
                                     </Text>
                                     <Text>
@@ -51,102 +56,48 @@ export default function DetalhePrevisaoComponent( { display, onFecharModal, coor
                                     <Text>
                                         {previsao.weather[0].description}
                                     </Text>
-                                </Animated.View>
+                                </View>
 
-                                <Animated.View style={styles.body}>
-                                    <View>
-                                        <Text style={styles.body_temp}>
-                                                <Image
-                                                style={styles.body_image}
-                                                source={{uri: `http://openweathermap.org/img/wn/${previsao.weather[0].icon}@2x.png`}}
-                                                />
-                                                {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp)} 
-                                                <Text style={styles.body_temp_graus}>ºC</Text>
-                                        </Text>
-                                        <Text style={styles.body_temp_max_min}>
-                                            Max {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_max)} º / Min {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_min)} º
-                                        </Text>
-                                        <Text>
-                                            Humidade: {previsao.main.humidity} %
-                                        </Text>  
-                                        <Text>
-                                            Vento: {(previsao.wind.speed * 3.6).toFixed(2)} km/h
-                                        </Text>
-                                        <Text>
-                                            Pressão: {previsao.main.pressure} hPa                                        
-                                        </Text>
+                                <View style={styles.body}>
+                                    <Text style={styles.bodyTemperaturaText}>
+                                            <Image
+                                            style={styles.body_image}
+                                            source={{uri: `http://openweathermap.org/img/wn/${previsao.weather[0].icon}@2x.png`}}
+                                            />
+                                            {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp)} 
+                                            <Text style={styles.bodyTemperaturaGrausText}>ºC</Text>
+                                    </Text>
+                                    <Text>
+                                        Max {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_max)} º / Min {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_min)} º
+                                    </Text>
+                                    <Text>
+                                        Humidade: {previsao.main.humidity} %
+                                    </Text>  
+                                    <Text>
+                                        Vento: {(previsao.wind.speed * 3.6).toFixed(2)} km/h
+                                    </Text>
+                                    <Text>
+                                        Pressão: {previsao.main.pressure} hPa                                        
+                                    </Text>
 
-                                        <Text style={styles.body_observacao}>                                        
-                                            A temperatura agora é de {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp)} ºC e parece {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.feels_like)} ºC lá fora. O vento está soprando cerca de {(previsao.wind.speed * 3.6).toFixed(2)} km/h pressão de {previsao.main.pressure} hPa.
-                                        </Text>                           
-                                    </View>
-                                </Animated.View>
+                                    <Text style={styles.bodyTemperaturaObservacaoText}>                                        
+                                        A temperatura agora é de {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp)} ºC e parece {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.feels_like)} ºC lá fora. O vento está soprando cerca de {(previsao.wind.speed * 3.6).toFixed(2)} km/h pressão de {previsao.main.pressure} hPa.
+                                    </Text>                           
+                                </View>
                             </ScrollView>                        
 
-                            <Animated.View style={styles.footer}>
+                            <View style={styles.footer}>
                                 <Button
-                                    style={styles.buttonFavoritar}
+                                    style={buttons.buttonFavoritar}
                                     title="Favoritar Posição"
                                     color="#302f2b"
                                     onPress={() => onSetMarkers(coordenadas)}
                                 />
-                            </Animated.View>
+                            </View>
                         </View>
             </Modal> )}
         </>
-    );    
-}
+    );
+};
 
-const styles = StyleSheet.create({
-    content: {
-      flex: 1,
-      backgroundColor: 'white',
-      padding: 22,
-      borderRadius: 4,
-      borderColor: 'rgba(0, 0, 0, 0.1)',
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-      borderBottomLeftRadius: 10,
-      borderBottomRightRadius: 10
-    },
-    contentTitle: {
-      fontSize: 20,
-      marginBottom: 12,
-    },
-    header: {
-    },
-    footer: {
-        paddingTop: 50
-    },
-    header_text: {
-        fontSize: 25,
-        fontWeight: "bold",
-    },
-    body: {
-    },
-    body_temp: {
-        fontSize: 50,
-        textAlign: "center"
-    },
-    body_temp_graus: {
-        fontSize: 20,
-        textAlignVertical: "top"
-    },
-    body_image:{
-        width: 100,
-        height: 100
-    },
-    body_temp_max_min: {
-        textAlign: "center",
-        fontSize: 6,
-        marginBottom: 10
-    },
-    body_observacao: {
-        fontSize: 18,
-        paddingTop: 10,
-        paddingBottom: 10,
-        textAlign: "justify"
-    },
-    buttonFavoritar: {
-    }
-  });
+export default DetalhePrevisaoComponent;
