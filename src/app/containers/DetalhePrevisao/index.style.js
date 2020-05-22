@@ -13,14 +13,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10
   },
   header: {
-    flexDirection: "row"
   },
   headerTitle: {
     fontSize: 25,
     fontWeight: "bold",
   },
   body: {
-    flexDirection: "row"
   },
   footer: {
     paddingTop: 50
@@ -38,10 +36,19 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     textAlign: "justify"
+  },
+  bodyImage: {
+    width: 100,
+    height: 100
+  },
+  bodyTemperaturaMaxMin: {
+    textAlign: "center",
+    fontSize: 6,
+    marginBottom: 10
   }
 });
 
-const buttons = styles.create({
+const buttons = StyleSheet.create({
   buttonFavoritar: {}
 });
 

@@ -61,13 +61,13 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                                 <View style={styles.body}>
                                     <Text style={styles.bodyTemperaturaText}>
                                             <Image
-                                            style={styles.body_image}
+                                            style={styles.bodyImage}
                                             source={{uri: `http://openweathermap.org/img/wn/${previsao.weather[0].icon}@2x.png`}}
                                             />
                                             {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp)} 
                                             <Text style={styles.bodyTemperaturaGrausText}>ºC</Text>
                                     </Text>
-                                    <Text>
+                                    <Text style={styles.bodyTemperaturaMaxMin}>
                                         Max {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_max)} º / Min {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_min)} º
                                     </Text>
                                     <Text>
