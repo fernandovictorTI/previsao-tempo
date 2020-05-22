@@ -5,7 +5,7 @@ import {
     StyleSheet, 
     View, 
     Dimensions } from 'react-native';
-import DetalhePrevisaoComponent from '../../components/detalhe-previsao';
+import DetalhePrevisaoComponent from '../DetalhePrevisao/index';
 import { Guid } from "guid-typescript";
 
 export default function App() {

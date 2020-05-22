@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Animated, Button, View, StyleSheet, Text, Image, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
-import api from '../../shared/services/openweather.services';
-import utilsFunctions from '../../shared/utils/utils';
+import openWeatherService from '../../services/openweather.services';
+import dataHelper from '../../helper/data.helper';
+import temperaturaHelper from '../../helper/temperatura.helper';
 
 export default function DetalhePrevisaoComponent( { display, onFecharModal, coordenadas, onSetMarkers } ){    
 
@@ -16,7 +17,7 @@ export default function DetalhePrevisaoComponent( { display, onFecharModal, coor
                 return;
             }
 
-            const { data } = await api.get(`weather?lat=${coordenadas.latitude}&lon=${coordenadas.longitude}`);
+            const { data } = await openWeatherService.get(`weather?lat=${coordenadas.latitude}&lon=${coordenadas.longitude}`);
             setPrevisao(data);
         }
 
@@ -45,7 +46,7 @@ export default function DetalhePrevisaoComponent( { display, onFecharModal, coor
                                         {previsao.name} - {previsao.sys.country}
                                     </Text>
                                     <Text>
-                                        {utilsFunctions.obterDiaSemana()}, {utilsFunctions.obterHoraAtual()}
+                                        {dataHelper.obterDiaSemana()}, {dataHelper.obterHoraAtual()}
                                     </Text>
                                     <Text>
                                         {previsao.weather[0].description}
@@ -59,11 +60,11 @@ export default function DetalhePrevisaoComponent( { display, onFecharModal, coor
                                                 style={styles.body_image}
                                                 source={{uri: `http://openweathermap.org/img/wn/${previsao.weather[0].icon}@2x.png`}}
                                                 />
-                                                {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp)} 
+                                                {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp)} 
                                                 <Text style={styles.body_temp_graus}>ºC</Text>
                                         </Text>
                                         <Text style={styles.body_temp_max_min}>
-                                            Max {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp_max)} º / Min {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp_min)} º
+                                            Max {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_max)} º / Min {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp_min)} º
                                         </Text>
                                         <Text>
                                             Humidade: {previsao.main.humidity} %
@@ -76,7 +77,7 @@ export default function DetalhePrevisaoComponent( { display, onFecharModal, coor
                                         </Text>
 
                                         <Text style={styles.body_observacao}>                                        
-                                            A temperatura agora é de {utilsFunctions.converterTemperaturaCelcius(previsao.main.temp)} ºC e parece {utilsFunctions.converterTemperaturaCelcius(previsao.main.feels_like)} ºC lá fora. O vento está soprando cerca de {(previsao.wind.speed * 3.6).toFixed(2)} km/h pressão de {previsao.main.pressure} hPa.
+                                            A temperatura agora é de {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.temp)} ºC e parece {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsao.main.feels_like)} ºC lá fora. O vento está soprando cerca de {(previsao.wind.speed * 3.6).toFixed(2)} km/h pressão de {previsao.main.pressure} hPa.
                                         </Text>                           
                                     </View>
                                 </Animated.View>
