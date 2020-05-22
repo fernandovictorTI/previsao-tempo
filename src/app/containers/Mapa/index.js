@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { 
-    StyleSheet, 
-    View, 
-    Dimensions } from 'react-native';
+import { View } from 'react-native';
 import DetalhePrevisaoComponent from '../DetalhePrevisao/index';
 import { Guid } from "guid-typescript";
+import {
+    styles
+  } from './index.style';
 
-export default function App() {
+const MapaViewComponent = () => {
 
     const [location, setLocation] = useState({
         latitude: null,
@@ -54,7 +54,7 @@ export default function App() {
     }
 
     function onFecharModalIncluirMarcadores(coordinate) {
-        setDisplay(false);
+        onFecharModal();
         setMarkers([...markers,
         {
             coordinate,
@@ -82,17 +82,6 @@ export default function App() {
             <DetalhePrevisaoComponent display={display} onFecharModal={onFecharModal} coordenadas={coordenadas} onSetMarkers={onFecharModalIncluirMarcadores} />
         </View>
     );
-}
+};
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#FFF",
-    },
-    mapStyle: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height
-    }
-});
+export default MapaViewComponent;
