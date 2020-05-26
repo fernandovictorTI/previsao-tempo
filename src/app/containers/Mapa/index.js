@@ -29,7 +29,7 @@ const MapaViewComponent = () => {
                 return;
             }
 
-            const { coords } = await Location.getCurrentPositionAsync({});
+            const { coords } = await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.High});
 
             let region = {
                 latitude: coords.latitude,

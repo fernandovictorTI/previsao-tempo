@@ -45,6 +45,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 6,
     marginBottom: 10
+  },
+  iconPrevisao:{
+    width: 30,
+    height: 30
   }
 });
 
