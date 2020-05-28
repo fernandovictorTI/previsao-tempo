@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { View } from 'react-native';
-import DetalhePrevisaoComponent from '../DetalhePrevisao/index';
+import DetalhePrevisaoComponent from '../DetalhePrevisao/detalheprevisao.container';
 import { Guid } from "guid-typescript";
 import {
     styles
-  } from './index.style';
+  } from './mapa.container.style';
 
 const MapaViewComponent = () => {
 
@@ -29,7 +29,7 @@ const MapaViewComponent = () => {
                 return;
             }
 
-            const { coords } = await Location.getCurrentPositionAsync({});
+            const { coords } = await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.High});
 
             let region = {
                 latitude: coords.latitude,
