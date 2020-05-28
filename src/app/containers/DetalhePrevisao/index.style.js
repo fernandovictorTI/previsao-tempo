@@ -47,8 +47,11 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   iconPrevisao:{
-    width: 30,
-    height: 30
+    width: 70,
+    height: 70
+  },
+  tituloCardPrevisao: {
+    textAlign: "center",
   }
 });
 

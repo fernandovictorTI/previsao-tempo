@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, View, Text, Image, ScrollView } from 'react-native';
+import { Button, View, Text, Image, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import Modal from 'react-native-modal';
 import openWeatherService from '../../services/openweather.services';
 import dataHelper from '../../helper/data.helper';
@@ -8,6 +8,8 @@ import {
     styles,
     buttons
   } from './index.style';
+
+import { Card } from "react-native-elements";
 
 const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMarkers }) => {
 
@@ -23,9 +25,6 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
             }
 
             const { data } = await openWeatherService.get(`forecast?lat=${coordenadas.latitude}&lon=${coordenadas.longitude}`);
-            
-            console.log(`forecast?lat=${coordenadas.latitude}&lon=${coordenadas.longitude}`);
-
             setPrevisao(data);
             setPrevisaoSelecionada(data.list[0]);
         }
@@ -39,8 +38,6 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                 isVisible={display} 
                 onBackdropPress={onFecharModal}
                 onBackButtonPress={onFecharModal}                
-                onSwipeComplete={onFecharModal}
-                swipeDirection="left"
                 animationInTiming={1000}
                 animationOutTiming={1000}
                 backdropTransitionInTiming={800}
@@ -49,7 +46,6 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                         <View style={styles.card}>
 
                             <ScrollView>
-                            
                                 <View style={styles.header}>
                                     <Text style={styles.headerTitle}>
                                         {previsao.city.name} - {previsao.city.country}
@@ -82,26 +78,36 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                                     </Text>
                                     <Text>
                                         Pressão: {previsaoSelecionada.main.pressure} hPa                                        
-                                    </Text>
-
-                                    <Text style={styles.bodyTemperaturaObservacaoText}>                                        
-                                        A temperatura agora é de {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoSelecionada.main.temp)} ºC e parece {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoSelecionada.main.feels_like)} ºC lá fora. O vento está soprando cerca de {(previsaoSelecionada.wind.speed * 3.6).toFixed(2)} km/h pressão de {previsaoSelecionada.main.pressure} hPa.
-                                    </Text>                           
+                                    </Text>                                                              
                                 </View>
 
-                                <View>
-                                  {previsao.list && (previsao.list.map((previsaoItem, index) => (
-                                    <Text key={index} style={styles.bodyTemperaturaMaxMin}>
-                                      {dataHelper.obterDiaSemanaPorData(previsaoItem.dt)}
-                                      <Image
+                                <FlatList 
+                                  data={previsao.list}
+                                  horizontal
+                                  showsHorizontalScrollIndicator={false}
+                                  automaticallyAdjustContentInsets={false}
+                                  removeClippedSubviews={false}
+                                  enableEmptySections={false}
+                                  legacyImplementation={true}
+                                  renderItem={({ item: previsaoItem }) => {
+                                    return (
+                                      <Card
+                                        title={previsaoItem.dt_txt}
+                                        containerStyle={{ padding: 0, width: 100, alignContent: "center", alignItems: "center"  }}
+                                      >
+                                        <Image
                                             style={styles.iconPrevisao}
                                             source={{uri: `http://openweathermap.org/img/wn/${previsaoItem.weather[0].icon}@2x.png`}}
                                             />
-                                      Max {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoItem.main.temp_max)} º / Min {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoItem.main.temp_min)} º
-                                    </Text>
-                                    ))
-                                  )}
-                                </View>
+                                        <Text style={styles.bodyTemperaturaMaxMin}>
+                                          Max {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoItem.main.temp_max)} º / Min {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoItem.main.temp_min)} º
+                                        </Text>
+                                      </Card>
+
+                                    );
+                                  }}
+                                  keyExtractor={(item, index) => index}
+                                />
                             </ScrollView>                        
 
                             <View style={styles.footer}>

@@ -28,7 +28,7 @@ const obterDiaSemanaPorData = (data)  => {
     diasSemana[5] = "Sexta-feira";
     diasSemana[6] = "Sábado";
 
-    return diasSemana[d.getDay()];
+    return diasSemana[d.getDay()].toString().substr(0, 3);
 
 }
 
