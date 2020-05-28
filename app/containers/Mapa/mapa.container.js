@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { View } from 'react-native';
-import DetalhePrevisaoComponent from '../DetalhePrevisao/detalheprevisao.container';
+import DetalhePrevisaoComponent from '../../components/DetalhePrevisao/detalheprevisao.component';
 import { Guid } from "guid-typescript";
 import {
     styles
   } from './mapa.container.style';
 
-const MapaViewComponent = () => {
+const MapaViewContainer = () => {
 
     const [location, setLocation] = useState({
         latitude: null,
@@ -84,4 +84,4 @@ const MapaViewComponent = () => {
     );
 };
 
-export default MapaViewComponent;
+export default MapaViewContainer;

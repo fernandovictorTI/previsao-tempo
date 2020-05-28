@@ -7,8 +7,8 @@ import temperaturaHelper from '../../helper/temperatura.helper';
 import {
     styles,
     buttons
-  } from './detalheprevisao.container.style';
-  import PrevisaoProximosDiasListComponent from './components/PrevisaoProximosDias/previsaoproximosdias.container';
+  } from './detalheprevisao.component.style';
+  import PrevisaoProximosDiasListComponent from '../PrevisaoProximosDias/previsaoproximosdias.component';
 
 const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMarkers }) => {
 
@@ -79,9 +79,7 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                                         Pressão: {previsaoSelecionada.main.pressure} hPa                                        
                                     </Text>                                                              
                                 </View>
-
-                                <PrevisaoProximosDiasListComponent previsoes={previsao.list}/>
-                                
+                                <PrevisaoProximosDiasListComponent previsoes={previsao.list}/>                                
                             </ScrollView>                        
 
                             <View style={styles.footer}>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, Image, FlatList } from 'react-native';
-import dataHelper from '../../../../helper/data.helper';
-import temperaturaHelper from '../../../../helper/temperatura.helper';
+import dataHelper from '../../helper/data.helper';
+import temperaturaHelper from '../../helper/temperatura.helper';
 import { Card } from 'react-native-elements';
-import { styles } from './previsaoproximosdias.container.style';
+import { styles } from './previsaoproximosdias.component.style';
 
 const RenderCard = ({previsaoItem}) => {
     return (
