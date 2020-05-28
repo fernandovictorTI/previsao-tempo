@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 
-import App from './index';
+import App from './mapa.container';
 
 describe('<App />', () => {
     it('Renderizado corretamente', () => {

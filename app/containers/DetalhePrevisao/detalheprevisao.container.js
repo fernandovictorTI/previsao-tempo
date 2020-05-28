@@ -7,9 +7,8 @@ import temperaturaHelper from '../../helper/temperatura.helper';
 import {
     styles,
     buttons
-  } from './index.style';
-
-import { Card } from "react-native-elements";
+  } from './detalheprevisao.container.style';
+  import PrevisaoProximosDiasListComponent from './components/PrevisaoProximosDias/previsaoproximosdias.container';
 
 const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMarkers }) => {
 
@@ -81,33 +80,8 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                                     </Text>                                                              
                                 </View>
 
-                                <FlatList 
-                                  data={previsao.list}
-                                  horizontal
-                                  showsHorizontalScrollIndicator={false}
-                                  automaticallyAdjustContentInsets={false}
-                                  removeClippedSubviews={false}
-                                  enableEmptySections={false}
-                                  legacyImplementation={true}
-                                  renderItem={({ item: previsaoItem }) => {
-                                    return (
-                                      <Card
-                                        title={previsaoItem.dt_txt}
-                                        containerStyle={{ padding: 0, width: 100, alignContent: "center", alignItems: "center"  }}
-                                      >
-                                        <Image
-                                            style={styles.iconPrevisao}
-                                            source={{uri: `http://openweathermap.org/img/wn/${previsaoItem.weather[0].icon}@2x.png`}}
-                                            />
-                                        <Text style={styles.bodyTemperaturaMaxMin}>
-                                          Max {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoItem.main.temp_max)} º / Min {temperaturaHelper.converterTemperaturaKelvinToCelcius(previsaoItem.main.temp_min)} º
-                                        </Text>
-                                      </Card>
-
-                                    );
-                                  }}
-                                  keyExtractor={(item, index) => index}
-                                />
+                                <PrevisaoProximosDiasListComponent previsoes={previsao.list}/>
+                                
                             </ScrollView>                        
 
                             <View style={styles.footer}>
