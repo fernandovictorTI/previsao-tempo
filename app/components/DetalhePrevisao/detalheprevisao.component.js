@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, View, Text, Image, ScrollView, FlatList, SafeAreaView } from 'react-native';
+import { View, Text, Image, ScrollView } from 'react-native';
+import { Button } from 'react-native-elements'
 import Modal from 'react-native-modal';
 import openWeatherService from '../../services/openweather.services';
 import dataHelper from '../../helper/data.helper';
@@ -14,6 +15,7 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
 
     const [previsao, setPrevisao] = useState(null);
     const [previsaoSelecionada, setPrevisaoSelecionada] = useState(null);
+    const [listaPrevisao, setListaPrevisao] = useState(null);
 
     useEffect(() => {
 
@@ -23,13 +25,18 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                 return;
             }
 
-            const { data } = await openWeatherService.get(`forecast?lat=${coordenadas.latitude}&lon=${coordenadas.longitude}`);
+            const { data } = await openWeatherService.get(`forecast?lat=${coordenadas.latitude}&lon=${coordenadas.longitude}&cnt=3`);
             setPrevisao(data);
             setPrevisaoSelecionada(data.list[0]);
+            setListaPrevisao(data.list);
         }
 
         _obterPrevisaoTempo();
     }, [coordenadas]);
+
+    function onEscolherPrevisao(prev) {
+        setPrevisaoSelecionada(prev);
+    }
     
     return (
         <>
@@ -79,14 +86,14 @@ const DetalhePrevisaoComponent = ({ display, onFecharModal, coordenadas, onSetMa
                                         Pressão: {previsaoSelecionada.main.pressure} hPa                                        
                                     </Text>                                                              
                                 </View>
-                                <PrevisaoProximosDiasListComponent previsoes={previsao.list}/>                                
+                                <PrevisaoProximosDiasListComponent previsoes={listaPrevisao} onEscolherPrevisao={onEscolherPrevisao} />                                
                             </ScrollView>                        
 
                             <View style={styles.footer}>
                                 <Button
                                     style={buttons.buttonFavoritar}
                                     title="Favoritar Posição"
-                                    color="#302f2b"
+                                    color="#302f2b"                                    
                                     onPress={() => onSetMarkers(coordenadas)}
                                 />
                             </View>
